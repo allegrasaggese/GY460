@@ -39,11 +39,20 @@ child2 = xml_child(child1, search = 4)
 listForm = as_list(child2)
 isLayer = names(listForm) == 'Layer'
 listForm = listForm[isLayer]
-finalDf = data.frame(rep(0, n = 9))
+finalDf = matrix(nrow = 1, ncol = 5) %>%
+  data.frame()
+carDirecs = c("westBoundLongitude",
+                        "eastBoundLongitude",
+                        "southBoundLatitude",
+                        "northBoundLatitude")
+names(finalDf) = c('Title', carDirecs)
 for(i in 1:length(listForm)){
   curLayer = listForm[i]
-  finalDf[1,i] = curLayer$Layer$Title
-  print(finalDf)
+  finalDf[i,1] = curLayer$Layer$Title
+  curBndBox = curLayer$Layer$EX_GeographicBoundingBox
+  for(j in carDirecs){
+    finalDf[i,j] = curBndBox[[j]]
+  }
 }
 ```
 
