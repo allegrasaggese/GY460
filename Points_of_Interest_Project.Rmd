@@ -24,8 +24,27 @@ roots <- xmlRoot(file)
 
 geog_node <- xmlChildren(file, search =Service)
 set <- getNodeSet(file, "//EX_GeographicBoundingBox")
-xmlSApply(set, xmlValue)
+xmlSApply(set, xmlValue) 
 
+# Trying using xml_find_all here instead
+file = read_xml('http://servisi.azo.hr/priroda/wms?request=GetCapabilities')
+test = xml_find_all(file, '//Layer')
+test = xml_find_all(file, '//EX_GeographicBoundingBox')
+```
+
+```{r}
+rooty = xml_root(file)
+child1 = xml_child(rooty, search = 2)
+child2 = xml_child(child1, search = 4)
+listForm = as_list(child2)
+isLayer = names(listForm) == 'Layer'
+listForm = listForm[isLayer]
+finalDf = data.frame(rep(0, n = 9))
+for(i in 1:length(listForm)){
+  curLayer = listForm[i]
+  finalDf[1,i] = curLayer$Layer$Title
+  print(finalDf)
+}
 ```
 
 
